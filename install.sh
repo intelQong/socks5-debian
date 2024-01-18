@@ -1,25 +1,9 @@
-#!/bin/bash
-# Simple Dante Socks5 Script for Debian
-# Script by Bonveio
-# https://github.com/Bonveio/BonvScripts
-#
-
 function YourBanner(){
-# Edit nyo to
  echo -e " Welcome to my Script"
- echo -e " SOCKS5 Server Installer for Debian"
- echo -e " Script by Bonveio"
+ echo -e " SOCKS5 Server Installer"
  echo -e " This script is open for Remodification and Redistribution"
  echo -e ""
 }
-
-source /etc/os-release
-if [[ "$ID" != 'debian' ]]; then
- YourBanner
- echo -e "[\e[1;31mError\e[0m] This script is for Debian Machine only, exting..." 
- exit 1
-fi
-
 if [[ $EUID -ne 0 ]];then
  YourBanner
  echo -e "[\e[1;31mError\e[0m] This script must be run as root, exiting..."
@@ -44,17 +28,17 @@ client pass {
  from: 0.0.0.0/0 to: 0.0.0.0/0
  log: error connect disconnect
  }
- 
+
 client block {
  from: 0.0.0.0/0 to: 0.0.0.0/0
  log: connect error
  }
- 
+
 socks pass {
  from: 0.0.0.0/0 to: 0.0.0.0/0
  log: error connect disconnect
  }
- 
+
 socks block {
  from: 0.0.0.0/0 to: 0.0.0.0/0
  log: connect error
@@ -68,7 +52,7 @@ EOF
  systemctl restart danted.service
  systemctl enable danted.service
 }
- 
+
 function Uninstallation(){
  echo -e '[*] Uninstalling SOCKS5 Server'
  apt-get remove --purge dante-server &> /dev/null
@@ -102,8 +86,6 @@ Username: $socksUser
 Password: $socksPass
 EOF
  fi
- cat ~/socks5.txt | nc termbin.com 9999 > /tmp/walwal.txt
- echo -e " Your SOCKS5 Information Online: $(tr -d '\0' </tmp/walwal.txt)"
  echo -e ""
 }
 
@@ -122,22 +104,25 @@ until [[ "$opts" =~ ^[1-3]$ ]]; do
 	case $opts in
 	1)
 	until [[ "$SOCKSPORT" =~ ^[0-9]+$ ]] && [ "$SOCKSPORT" -ge 1 ] && [ "$SOCKSPORT" -le 65535 ]; do
-	read -rp " Choose your SOCKS5 Port [1-65535]: " -i 2408 -e SOCKSPORT
+	read -rp " Choose your SOCKS5 Port [1-65535]: " -i 1088 -e SOCKSPORT
 	done
 	SOCKSAUTH='none'
 	Installation
 	;;
 	2)
 	until [[ "$SOCKSPORT" =~ ^[0-9]+$ ]] && [ "$SOCKSPORT" -ge 1 ] && [ "$SOCKSPORT" -le 65535 ]; do
-	read -rp " Choose your SOCKS5 Port [1-65535]: " -i 2408 -e SOCKSPORT
+	read -rp " Choose your SOCKS5 Port [1-65535]: " -i 1088 -e SOCKSPORT
 	done
 	SOCKSAUTH='username'
-	until [[ "$socksUser" =~ ^[a-zA-Z0-9_]+$ ]]; do
-	read -rp " Your SOCKS5 Username: " -e socksUser
-	done
-	until [[ "$socksPass" =~ ^[a-zA-Z0-9_]+$ ]]; do
-	read -rp " Your SOCKS5 Password: " -e socksPass
-	done
+	until [[ "$socksUser" =~ ^[a-zA-Z0-9_/\.]+$ ]]; do
+    read -rp " Your SOCKS5 Username: " -e socksUser
+done
+
+until [[ "$socksPass" =~ ^[a-zA-Z0-9_/\.]+$ ]]; do
+    read -rp " Your SOCKS5 Password: " -e socksPass
+done
+
+
 	userdel -r -f $socksUser &> /dev/null
 	useradd -m -s /bin/false $socksUser
 	echo -e "$socksPass\n$socksPass\n" | passwd $socksUser &> /dev/null
@@ -150,3 +135,4 @@ until [[ "$opts" =~ ^[1-3]$ ]]; do
 esac
 SuccessMessage
 exit 1
+
