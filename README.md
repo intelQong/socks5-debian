@@ -1,8 +1,8 @@
 
 
-### Sock5 Server Automated script###
+### Sock5 Server Automated script
 
-<p align="center">Simple Dante SOCKS5 Proxy Server Installer Script for Debian</p>
+<p align="center">Simple Dante SOCKS5 Proxy Server Installer Script</p>
 
 Command:
 1) `git clone https://github.com/intelQong/socks5-debian`
