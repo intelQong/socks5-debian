@@ -1,6 +1,6 @@
 
 
-##Sock-5 Server Automated script###
+### Sock5 Server Automated script###
 
 <p align="center">Simple Dante SOCKS5 Proxy Server Installer Script for Debian</p>
 
